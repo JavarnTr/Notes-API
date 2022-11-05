@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<head>
+    <title>API</title>
+</head>
+
+<!-- forms.html -->
+{{if .Success}}
+    <h1>Thanks for your message!</h1>
+{{else}}
+    <h1>Contact</h1>
+    <form method="POST">
+        <label>Note Name:</label><br />
+        <input type="text" name="name"><br />
+        <label>Note Text:</label><br />
+        <input type="text" name="text"><br />
+        <label>Note Status:</label><br />
+        <input type="text" name="status"><br />
+        <label>Delegation:</label><br />
+        <input type="text" name="delegation"><br />
+        <label>Userid:</label><br />
+        <input type="text" name="userid"><br />
+        <label>Time:</label><br />
+        <input type="text" name="time"><br />
+        <input type="submit">
+    </form>
+{{end}}
+
+
+</html>
+
