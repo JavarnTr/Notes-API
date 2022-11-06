@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
+	"strconv"
 
 	_ "github.com/lib/pq"
 )
@@ -37,20 +38,16 @@ type CreateUser struct {
 }
 
 type EditNote struct {
-	NoteID     string
-	Name       string
-	Text       string
-	Status     string
-	Delegation string
-	Userid     string
-	Time       string
+	NoteID string
+	Name   string
+	Text   string
 }
 
 func main() {
 
 	edit()
 
-	http.ListenAndServe(":8081", nil)
+	http.ListenAndServe(":8082", nil)
 }
 
 func add() {
@@ -186,16 +183,19 @@ func edit() {
 		}
 
 		editDetails := EditNote{
-			Name:       r.FormValue("ename"),
-			Text:       r.FormValue("etext"),
-			Status:     r.FormValue("estatus"),
-			Delegation: r.FormValue("edelegation"),
-			Userid:     r.FormValue("euserid"),
-			Time:       r.FormValue("etime"),
+			NoteID: r.FormValue("enoteid"),
+			Name:   r.FormValue("ename"),
+			Text:   r.FormValue("etext"),
 		}
 
 		// do something with details
 		_ = editDetails
+
+		b, err := strconv.Atoi((editDetails.NoteID))
+
+		if err != nil {
+			panic(err)
+		}
 
 		//Connect to the database
 		connStr := fmt.Sprintf("host=%s port=%d user=%s "+
@@ -208,8 +208,8 @@ func edit() {
 		defer db.Close()
 
 		//Insert the note data into the Postgres database for storage
-		updateStatement := `UPDATE notes SET (text, status, delegation, userid, date) = ($2, $3, $4, $5, $6) WHERE name = $1;`
-		_, err = db.Exec(updateStatement, editDetails.Name, editDetails.Name, editDetails.Text, editDetails.Status, editDetails.Delegation, editDetails.Userid, editDetails.Time)
+		updateStatement := `UPDATE notes SET name = $1 where id = $2;`
+		_, err = db.Exec(updateStatement, editDetails.Name, b)
 		if err != nil {
 			panic(err)
 		} else {
