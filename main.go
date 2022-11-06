@@ -18,7 +18,8 @@ const (
 	dbname   = "Enterprise"
 )
 
-type CreateNote struct {
+type Note struct {
+	NoteID     string
 	Name       string
 	Text       string
 	Status     string
@@ -27,23 +28,14 @@ type CreateNote struct {
 	Time       string
 }
 
-type RemoveNote struct {
-	NoteID string
-	Name   string
-}
-
-type CreateUser struct {
+type User struct {
 	UserID string
 	Name   string
 }
 
-type EditNote struct {
-	NoteID string
-}
-
 func main() {
 
-	remove()
+	edit()
 
 	http.ListenAndServe(":8082", nil)
 }
@@ -57,7 +49,7 @@ func add() {
 			return
 		}
 
-		details := CreateNote{
+		details := Note{
 			Name:       r.FormValue("name"),
 			Text:       r.FormValue("text"),
 			Status:     r.FormValue("status"),
@@ -102,9 +94,8 @@ func remove() {
 			return
 		}
 
-		removeDetails := RemoveNote{
-			NoteID: r.FormValue("noteid"),
-			Name:   r.FormValue("named"),
+		removeDetails := Note{
+			NoteID: r.FormValue("removeNoteID"),
 		}
 
 		// do something with details
@@ -121,8 +112,8 @@ func remove() {
 		defer db.Close()
 
 		//Insert the note data into the Postgres database for storage
-		deleteStatement := `update notes set name = $2 where id = $1`
-		_, err = db.Exec(deleteStatement, removeDetails.NoteID, removeDetails.Name)
+		deleteStatement := `delete from notes where id = $1`
+		_, err = db.Exec(deleteStatement, removeDetails.NoteID)
 		if err != nil {
 			panic(err)
 		} else {
@@ -142,8 +133,8 @@ func createUser() {
 			return
 		}
 
-		accountCreate := CreateUser{
-			Name: r.FormValue("name"),
+		accountCreate := User{
+			Name: r.FormValue("createName"),
 		}
 
 		// do something with details
@@ -181,8 +172,14 @@ func edit() {
 			return
 		}
 
-		editDetails := RemoveNote{
-			NoteID: r.FormValue("noteid"),
+		editDetails := Note{
+			NoteID:     r.FormValue("editNoteID"),
+			Name:       r.FormValue("editName"),
+			Text:       r.FormValue("editText"),
+			Status:     r.FormValue("editStatus"),
+			Delegation: r.FormValue("editDelegation"),
+			Userid:     r.FormValue("editUserID"),
+			Time:       r.FormValue("editDate"),
 		}
 
 		// do something with details
@@ -199,8 +196,8 @@ func edit() {
 		defer db.Close()
 
 		//Insert the note data into the Postgres database for storage
-		deleteStatement := `Delete from notes WHERE id = $1`
-		_, err = db.Exec(deleteStatement, editDetails.NoteID)
+		deleteStatement := `update notes set (name, text, status, delegation, userid, date) = ($1, $2, $3, $4, $5, $6) where id = $7`
+		_, err = db.Exec(deleteStatement, editDetails.Name, editDetails.Text, editDetails.Status, editDetails.Delegation, editDetails.Userid, editDetails.Time, editDetails.NoteID)
 		if err != nil {
 			panic(err)
 		} else {

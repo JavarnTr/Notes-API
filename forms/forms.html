@@ -8,15 +8,54 @@
 </head>
 
 <!-- forms.html -->
-    
-
+<h1>Add a Note</h1>
+<form method="POST">
+    <label>Note Name:</label><br />
+    <input type="text" name="addName" required><br />
+    <label>Note Text:</label><br />
+    <input type="text" name="addText" required><br />
+    <label>Note Status:</label><br />
+    <input type="text" name="addStatus" required><br />
+    <label>Delegation:</label><br />
+    <input type="text" name="addDelegation" required><br />
+    <label>Userid:</label><br />
+    <input type="text" name="addUserID" required><br />
+    <label>Time:</label><br />
+    <input type="text" name="addTime" required><br />
+    <input type="submit">
+</form> 
 
 <h1>Delete a Note</h1>
     <form method="POST">
         <label>Note id:</label><br />
-        <input type="text" name="noteid" required><br />
-        <label>Note name:</label><br />
-        <input type="text" name="named" required><br />
+        <input type="text" name="deleteNoteID" required><br />
+        <input type="submit">
+    </form>
+
+<h1>Create an Account</h1>
+<form method="POST">
+    <label>Enter your name:</label><br />
+    <input type="text" name="createName" required><br />
+    <input type="submit">
+</form>
+
+
+<h1>Edit a Note</h1>
+    <form method="POST">
+        <label>Enter the ID of the note you wish to edit:</label><br />
+        <input type="text" name="editNoteID" required><br />
+        <label>Name:</label><br />
+        <input type="text" name="editName" required><br />
+        <label>Text:</label><br />
+        <input type="text" name="editText" required><br />
+        <label>Status:</label><br />
+        <input type="text" name="editStatus" required><br />
+        <label>Delegation:</label><br />
+        <input type="text" name="editDelegation" required><br />
+        <label>User ID:</label><br />
+        <input type="text" name="editUserID" required><br />
+        <label>Date:</label><br />
+        <input type="text" name="editDate" required><br />
         <input type="submit">
     </form>
 </html>
