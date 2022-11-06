@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
-	"strconv"
 
 	_ "github.com/lib/pq"
 )
@@ -30,6 +29,7 @@ type CreateNote struct {
 
 type RemoveNote struct {
 	NoteID string
+	Name   string
 }
 
 type CreateUser struct {
@@ -39,13 +39,11 @@ type CreateUser struct {
 
 type EditNote struct {
 	NoteID string
-	Name   string
-	Text   string
 }
 
 func main() {
 
-	edit()
+	remove()
 
 	http.ListenAndServe(":8082", nil)
 }
@@ -106,6 +104,7 @@ func remove() {
 
 		removeDetails := RemoveNote{
 			NoteID: r.FormValue("noteid"),
+			Name:   r.FormValue("named"),
 		}
 
 		// do something with details
@@ -122,8 +121,8 @@ func remove() {
 		defer db.Close()
 
 		//Insert the note data into the Postgres database for storage
-		deleteStatement := `delete from notes where id = $1;`
-		_, err = db.Exec(deleteStatement, removeDetails.NoteID)
+		deleteStatement := `update notes set name = $2 where id = $1`
+		_, err = db.Exec(deleteStatement, removeDetails.NoteID, removeDetails.Name)
 		if err != nil {
 			panic(err)
 		} else {
@@ -182,20 +181,12 @@ func edit() {
 			return
 		}
 
-		editDetails := EditNote{
-			NoteID: r.FormValue("enoteid"),
-			Name:   r.FormValue("ename"),
-			Text:   r.FormValue("etext"),
+		editDetails := RemoveNote{
+			NoteID: r.FormValue("noteid"),
 		}
 
 		// do something with details
 		_ = editDetails
-
-		b, err := strconv.Atoi((editDetails.NoteID))
-
-		if err != nil {
-			panic(err)
-		}
 
 		//Connect to the database
 		connStr := fmt.Sprintf("host=%s port=%d user=%s "+
@@ -208,12 +199,12 @@ func edit() {
 		defer db.Close()
 
 		//Insert the note data into the Postgres database for storage
-		updateStatement := `UPDATE notes SET name = $1 where id = $2;`
-		_, err = db.Exec(updateStatement, editDetails.Name, b)
+		deleteStatement := `Delete from notes WHERE id = $1`
+		_, err = db.Exec(deleteStatement, editDetails.NoteID)
 		if err != nil {
 			panic(err)
 		} else {
-			fmt.Println("\nRow inserted successfully!")
+			fmt.Println("\nNote removed successfully.")
 		}
 
 		tmpl.Execute(w, struct{ Success bool }{true})
