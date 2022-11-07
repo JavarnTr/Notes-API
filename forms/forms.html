@@ -19,9 +19,9 @@
     <label>Delegation:</label><br />
     <input type="text" name="addDelegation" required><br />
     <label>Userid:</label><br />
-    <input type="text" name="addUserID" required><br />
+    <input type="text" name="addUserID"  required><br />
     <label>Time:</label><br />
-    <input type="text" name="addTime" required><br />
+    <input type="text" name="addTime" pattern="[0-9]*" Title="Please only enter numbers" required><br />
     <input value="submit1" type="submit" name="submit">
 </form> 
 
@@ -36,7 +36,7 @@
 <form method="POST">
     <label>Enter your name:</label><br />
     <input type="text" name="createName" required><br />
-    <input type="submit">
+    <input value="submit3" type="submit" name="submit">
 </form>
 
 
@@ -52,11 +52,9 @@
         <input type="text" name="editStatus" required><br />
         <label>Delegation:</label><br />
         <input type="text" name="editDelegation" required><br />
-        <label>User ID:</label><br />
-        <input type="text" name="editz" required><br />
         <label>Date:</label><br />
-        <input type="text" name="editName" required><br />
-        <input type="submit">
+        <input type="text" name="editDate" required><br />
+        <input value="submit4" type="submit" name="submit">
     </form>
 </html>
 
