@@ -55,9 +55,16 @@ func main() {
 
 		submit := r.FormValue("submit")
 
-		currentID := 1
+		loginDetails := Note{
+			Userid: r.FormValue("currentID"),
+		}
+
+		_ = loginDetails
+
 		//-------------------------------Add Note-------------------------------//
+
 		if submit == "submit1" {
+
 			details := Note{
 				Name:       r.FormValue("addName"),
 				Text:       r.FormValue("addText"),
@@ -69,9 +76,12 @@ func main() {
 			// do something with details
 			_ = details
 
+			fmt.Println(loginDetails.Userid)
+			fmt.Println(details.Name)
+
 			//Insert the note data into the Postgres database for storage
 			insertStatement := `INSERT INTO notes (name, text, status, delegation, userid, date) VALUES ($1, $2, $3, $4, $5, $6)`
-			_, err = db.Exec(insertStatement, details.Name, details.Text, details.Status, details.Delegation, currentID, details.Time)
+			_, err = db.Exec(insertStatement, details.Name, details.Text, details.Status, details.Delegation, loginDetails.Userid, details.Time)
 			if err != nil {
 				panic(err)
 			} else {
@@ -93,6 +103,7 @@ func main() {
 				panic(err)
 			} else {
 				fmt.Println("\nNote removed successfully.")
+				fmt.Println(removeDetails.NoteID)
 			}
 		} else if submit == "submit3" {
 			//-------------------------------Create User-------------------------------//
