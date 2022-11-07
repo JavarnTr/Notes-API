@@ -28,15 +28,6 @@ type Note struct {
 	Time       string
 }
 
-type AddNote struct {
-	Name       string
-	Text       string
-	Status     string
-	Delegation string
-	Userid     string
-	Time       string
-}
-
 type User struct {
 	UserID string
 	Name   string
@@ -44,6 +35,27 @@ type User struct {
 
 func main() {
 
+	tmpl := template.Must(template.ParseFiles("forms/forms.html"))
+
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			tmpl.Execute(w, nil)
+			return
+		}
+
+		submit := r.FormValue("submit")
+
+		if submit == "submit1" {
+			add()
+		} else if submit == "submit2" {
+			remove()
+		}
+	})
+
+	http.ListenAndServe(":8080", nil)
+}
+
+func add() {
 	tmpl := template.Must(template.ParseFiles("forms/forms.html"))
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -63,7 +75,7 @@ func main() {
 		defer db.Close()
 
 		//-------------------------------Add Note-------------------------------//
-		details := AddNote{
+		details := Note{
 			Name:       r.FormValue("addName"),
 			Text:       r.FormValue("addText"),
 			Status:     r.FormValue("addStatus"),
@@ -84,6 +96,29 @@ func main() {
 			fmt.Println("\nRow inserted successfully!")
 		}
 
+		tmpl.Execute(w, struct{ Success bool }{true})
+	})
+}
+
+func remove() {
+	tmpl := template.Must(template.ParseFiles("forms/forms.html"))
+
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			tmpl.Execute(w, nil)
+			return
+		}
+
+		//Connect to the database
+		connStr := fmt.Sprintf("host=%s port=%d user=%s "+
+			"password=%s dbname=%s sslmode=disable",
+			host, port, user, password, dbname)
+		db, err := sql.Open("postgres", connStr)
+		if err != nil {
+			panic(err)
+		}
+		defer db.Close()
+
 		//-------------------------------Remove Note-------------------------------//
 		removeDetails := Note{
 			NoteID: r.FormValue("deleteNoteID"),
@@ -100,12 +135,8 @@ func main() {
 		} else {
 			fmt.Println("\nNote removed successfully.")
 		}
-
 		tmpl.Execute(w, struct{ Success bool }{true})
-
 	})
-
-	http.ListenAndServe(":8080", nil)
 }
 
 func createUser() {
