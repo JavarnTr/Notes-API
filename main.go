@@ -38,6 +38,8 @@ type User struct {
 
 func main() {
 
+	p := Note{NoteID: "id", Name: "name", Text: "text", Status: "status", Delegation: "delegation", Userid: "userid", Time: "date"}
+
 	tmpl := template.Must(template.ParseFiles("forms/forms.html"))
 
 	//Connect to the database
@@ -52,9 +54,7 @@ func main() {
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
-			p := User{UserID: "hello", Name: "Another"}
-
-			tmpl.Execute(w, p)
+			tmpl.Execute(w, nil)
 			return
 		}
 
@@ -152,7 +152,7 @@ func main() {
 			defer rows.Close()
 
 			for rows.Next() {
-				var id int
+				var id string
 				var name string
 				var text string
 				var status string
@@ -165,6 +165,7 @@ func main() {
 				case sql.ErrNoRows:
 					fmt.Println("No rows were returned!")
 				case nil:
+
 					fmt.Println("ID:", id, "| Note Name:", name, "| Note Text:", text, "| Note Status:", status, "| Delegation:", delegation, "| Users:", userid, "| Time of creation:", date)
 				default:
 					fmt.Println("SQL query error occurred: ")
@@ -177,7 +178,6 @@ func main() {
 				panic(err)
 			}
 		}
-		p := User{UserID: "hello", Name: "Another"}
 
 		tmpl.Execute(w, p)
 	})
