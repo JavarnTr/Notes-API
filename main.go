@@ -34,10 +34,6 @@ type User struct {
 	Name   string
 }
 
-func displayData(w http.ResponseWriter, r *http.Request) {
-
-}
-
 //https://www.youtube.com/watch?v=QOZ4UrHMKus
 
 func main() {
@@ -181,7 +177,9 @@ func main() {
 				panic(err)
 			}
 		}
-		tmpl.Execute(w, struct{ Success bool }{true})
+		p := User{UserID: "hello", Name: "Another"}
+
+		tmpl.Execute(w, p)
 	})
 
 	http.ListenAndServe(":8080", nil)
