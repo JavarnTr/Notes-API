@@ -11,11 +11,10 @@
 
 
 <h1>Login</h1>
-    <label>Note id:</label><br />
-    <input type="text" name="currentId"><br />
-    <button id="loginBtn">Log In</button>
+<label>Note id:</label><br />
+<input type="text" id="currentId"><br />
+<button id="loginBtn">Log In</button>
    
-<p id="currentUserId"></p>
 
 <!-- forms.html -->
 <h1>Add a Note</h1>
@@ -29,7 +28,7 @@
     <label>Delegation:</label><br />
     <input type="text" name="addDelegation" required><br />
     <label>User ID:</label><br />
-    <input type="text" name="addUserID" required><br />
+    <input type="text" id="addUserId" required><br />
     <label>Time:</label><br />
     <input type="text" name="addTime" pattern="[0-9]*" Title="Please only enter numbers" required><br />
     <input value="submit1" type="submit" name="submit">
@@ -67,6 +66,11 @@
         <input value="submit4" type="submit" name="submit">
     </form>
 
-    <script src="javascript.js"></script>
+    <script>
+        $("#loginBtn").click(function(event) {
+            userid = $("#currentId").val();
+            $("#addUserId").val(userid);
+        });
+    </script>
 </html>
 

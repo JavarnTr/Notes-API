@@ -55,30 +55,24 @@ func main() {
 
 		submit := r.FormValue("submit")
 
-		currentUser := r.FormValue("currentId")
-		fmt.Println(currentUser)
-
-		fmt.Println(currentUser)
 		//-------------------------------Add Note-------------------------------//
 		if submit == "submit1" {
-			fmt.Println(currentUser)
 
 			details := Note{
 				Name:       r.FormValue("addName"),
 				Text:       r.FormValue("addText"),
 				Status:     r.FormValue("addStatus"),
 				Delegation: r.FormValue("addDelegation"),
+				Userid:     r.FormValue("addUserId"),
 				Time:       r.FormValue("addTime"),
 			}
 
 			// do something with details
 			_ = details
 
-			fmt.Println(currentUser)
-
 			//Insert the note data into the Postgres database for storage
-			insertStatement := `INSERT INTO notes (name, text, status, delegation, date) VALUES ($1, $2, $3, $4, $5)`
-			_, err = db.Exec(insertStatement, details.Name, details.Text, details.Status, details.Delegation, details.Time)
+			insertStatement := `INSERT INTO notes (name, text, status, delegation, userid, date) VALUES ($1, $2, $3, $4, $5, $6)`
+			_, err = db.Exec(insertStatement, details.Name, details.Text, details.Status, details.Delegation, details.Userid, details.Time)
 			if err != nil {
 				panic(err)
 			} else {
