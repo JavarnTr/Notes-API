@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"html/template"
+	"log"
 	"net/http"
 
 	_ "github.com/lib/pq"
@@ -57,7 +58,6 @@ func main() {
 
 		//-------------------------------Add Note-------------------------------//
 		if submit == "submit1" {
-
 			details := Note{
 				Name:       r.FormValue("addName"),
 				Text:       r.FormValue("addText"),
@@ -133,7 +133,45 @@ func main() {
 			} else {
 				fmt.Println("\nNote removed successfully.")
 			}
+		} else if submit == "submit5" {
+			//Interact with the database to search for those notes that match user input
+			searchStatement := `Select * from notes;`
+			rows, err := db.Query(searchStatement)
+			if err != nil {
+				log.Fatal(err)
+				fmt.Println("An error occurred when querying data!")
+			}
 
+			if err == sql.ErrNoRows {
+				println("Does not exist")
+			}
+			defer rows.Close()
+
+			for rows.Next() {
+				var id int
+				var name string
+				var text string
+				var status string
+				var delegation string
+				var userid string
+				var date string
+
+				//Print out the recieved data if it is found.
+				switch err = rows.Scan(&id, &name, &text, &status, &delegation, &userid, &date); err {
+				case sql.ErrNoRows:
+					fmt.Println("No rows were returned!")
+				case nil:
+					fmt.Println("ID:", id, "| Note Name:", name, "| Note Text:", text, "| Note Status:", status, "| Delegation:", delegation, "| Users:", userid, "| Time of creation:", date)
+				default:
+					fmt.Println("SQL query error occurred: ")
+					panic(err)
+				}
+			}
+			// get any error encountered during iteration
+			err = rows.Err()
+			if err != nil {
+				panic(err)
+			}
 		}
 		tmpl.Execute(w, struct{ Success bool }{true})
 	})
