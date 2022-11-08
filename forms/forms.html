@@ -8,13 +8,10 @@
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
 </head>
 
-
-
 <h1>Login</h1>
 <label>Note id:</label><br />
-<input type="text" id="currentId"><br />
+<input type="number" id="currentId"><br />
 <button id="loginBtn">Log In</button>
-   
 
 <!-- forms.html -->
 <h1>Add a Note</h1>
@@ -28,7 +25,7 @@
     <label>Delegation:</label><br />
     <input type="text" name="addDelegation" required><br />
     <label>User ID:</label><br />
-    <input type="text" id="addUserId" required><br />
+    <input type="text" name="addUserId" id="addUserId" class="readonly" required><br />
     <label>Time:</label><br />
     <input type="text" name="addTime" pattern="[0-9]*" Title="Please only enter numbers" required><br />
     <input value="submit1" type="submit" name="submit">
@@ -71,6 +68,11 @@
             userid = $("#currentId").val();
             $("#addUserId").val(userid);
         });
+
+        $(".readonly").on('keydown paste focus mousedown', function(e){
+                if(e.keyCode != 9) // ignore tab
+                    e.preventDefault();
+            });
     </script>
 </html>
 
