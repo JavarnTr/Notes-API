@@ -34,9 +34,28 @@ type User struct {
 	Name   string
 }
 
+func displayData(w http.ResponseWriter, r *http.Request) {
+	p := User{UserID: "Test", Name: "Another"}
+	custTemplate, err := template.ParseFiles("forms/forms.html")
+	if err != nil {
+
+	}
+	err = custTemplate.Execute(w, p)
+}
+
+https://www.youtube.com/watch?v=QOZ4UrHMKus
+func main() {
+
+	http.HandleFunc("/", displayData)
+
+	http.ListenAndServe(":8080", nil)
+}
+
 func main() {
 
 	tmpl := template.Must(template.ParseFiles("forms/forms.html"))
+
+	http.HandleFunc("/", displayData)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
