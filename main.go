@@ -14,7 +14,7 @@ const (
 	host     = "localhost"
 	port     = 5432
 	user     = "postgres"
-	password = "postgres"
+	password = "password"
 	dbname   = "Enterprise"
 )
 
@@ -77,8 +77,8 @@ func main() {
 			fmt.Println(currentUser)
 
 			//Insert the note data into the Postgres database for storage
-			insertStatement := `INSERT INTO notes (name, text, status, delegation, userid, date) VALUES ($1, $2, $3, $4, $5, $6)`
-			_, err = db.Exec(insertStatement, details.Name, details.Text, details.Status, details.Delegation, currentUser, details.Time)
+			insertStatement := `INSERT INTO notes (name, text, status, delegation, date) VALUES ($1, $2, $3, $4, $5)`
+			_, err = db.Exec(insertStatement, details.Name, details.Text, details.Status, details.Delegation, details.Time)
 			if err != nil {
 				panic(err)
 			} else {

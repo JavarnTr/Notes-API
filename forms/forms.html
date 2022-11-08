@@ -5,14 +5,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Home</title>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
 </head>
 
+
+
 <h1>Login</h1>
-    <form method="POST">
-        <label>Note id:</label><br />
-        <input type="text" name="currentId"><br />
-        <input type="submit" name="note" value="submit5">
-    </form>
+    <label>Note id:</label><br />
+    <input type="text" name="currentId"><br />
+    <button id="loginBtn">Log In</button>
+   
+<p id="currentUserId"></p>
 
 <!-- forms.html -->
 <h1>Add a Note</h1>
@@ -25,6 +28,8 @@
     <input type="text" name="addStatus" required><br />
     <label>Delegation:</label><br />
     <input type="text" name="addDelegation" required><br />
+    <label>User ID:</label><br />
+    <input type="text" name="addUserID" required><br />
     <label>Time:</label><br />
     <input type="text" name="addTime" pattern="[0-9]*" Title="Please only enter numbers" required><br />
     <input value="submit1" type="submit" name="submit">
@@ -48,18 +53,20 @@
 <h1>Edit a Note</h1>
     <form method="POST">
         <label>Enter the ID of the note you wish to edit:</label><br />
-        <input type="text" name="editNoteID" required><br />
+        <input type="text" name="editNoteID"><br />
         <label>Name:</label><br />
-        <input type="text" name="editName" required><br />
+        <input type="text" name="editName"><br />
         <label>Text:</label><br />
-        <input type="text" name="editText" required><br />
+        <input type="text" name="editText"><br />
         <label>Status:</label><br />
-        <input type="text" name="editStatus" required><br />
+        <input type="text" name="editStatus"><br />
         <label>Delegation:</label><br />
-        <input type="text" name="editDelegation" required><br />
+        <input type="text" name="editDelegation"><br />
         <label>Date:</label><br />
-        <input type="text" name="editDate" required><br />
+        <input type="text" name="editDate"><br />
         <input value="submit4" type="submit" name="submit">
     </form>
+
+    <script src="javascript.js"></script>
 </html>
 
