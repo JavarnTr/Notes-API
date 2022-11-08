@@ -19,6 +19,7 @@ const (
 	dbname   = "Enterprise"
 )
 
+//Struct for the note table
 type Note struct {
 	NoteID     string
 	Name       string
@@ -29,11 +30,13 @@ type Note struct {
 	Time       string
 }
 
+//Struct for the user table
 type User struct {
 	UserID string
 	Name   string
 }
 
+//Empty variable that will later be used to store note data when it is retrieved.
 var noteData Note
 
 func main() {
@@ -56,10 +59,11 @@ func main() {
 			return
 		}
 
+		//Finds out what button on the html page was clicked, so that it knows which function to run.
 		submit := r.FormValue("submit")
 
-		//-------------------------------Add Note-------------------------------//
-		if submit == "submit1" {
+		if submit == "addNote" {
+			//-------------------------------Add Note-------------------------------//
 			details := Note{
 				Name:       r.FormValue("addName"),
 				Text:       r.FormValue("addText"),
@@ -80,7 +84,8 @@ func main() {
 			} else {
 				fmt.Println("\nRow inserted successfully!")
 			}
-		} else if submit == "submit2" {
+		} else if submit == "deleteNote" {
+			//-------------------------------Remove Note-------------------------------//
 
 			removeDetails := Note{
 				NoteID: r.FormValue("deleteNoteID"),
@@ -98,7 +103,7 @@ func main() {
 				fmt.Println("\nNote removed successfully.")
 				fmt.Println(removeDetails.NoteID)
 			}
-		} else if submit == "submit3" {
+		} else if submit == "createAcc" {
 			//-------------------------------Create User-------------------------------//
 			accountCreate := User{
 				Name: r.FormValue("createName"),
@@ -114,7 +119,8 @@ func main() {
 			} else {
 				fmt.Println("\nRow inserted successfully!")
 			}
-		} else if submit == "submit4" {
+		} else if submit == "editNote" {
+			//-------------------------------Edit Note-------------------------------//
 			editDetails := Note{
 				NoteID:     r.FormValue("editNoteID"),
 				Name:       r.FormValue("editName"),
@@ -135,7 +141,9 @@ func main() {
 			} else {
 				fmt.Println("\nNote removed successfully.")
 			}
-		} else if submit == "submit5" {
+		} else if submit == "displayNote" {
+			//-------------------------------Display Notes-------------------------------//
+
 			//Interact with the database to search for those notes that match user input
 			searchStatement := `Select * from notes;`
 			rows, err := db.Query(searchStatement)
@@ -165,7 +173,6 @@ func main() {
 				case nil:
 					noteData = Note{NoteID: id, Name: name, Text: text, Status: status, Delegation: delegation, Userid: userid, Time: date}
 					fmt.Println("ID:", id, "| Note Name:", name, "| Note Text:", text, "| Note Status:", status, "| Delegation:", delegation, "| Users:", userid, "| Time of creation:", date)
-					tmpl.Execute(w, noteData)
 				default:
 					fmt.Println("SQL query error occurred: ")
 					panic(err)

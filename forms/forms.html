@@ -28,21 +28,21 @@
     <input type="text" name="addUserId" id="addUserId" class="readonly" required><br />
     <label>Time:</label><br />
     <input type="text" name="addTime" pattern="[0-9]*" Title="Please only enter numbers" required><br />
-    <input value="submit1" type="submit" name="submit">
+    <button value="addNote" type="submit" name="submit">Add Note</button>
 </form> 
 
 <h1>Delete a Note</h1>
     <form method="POST">
         <label>Note id:</label><br />
         <input type="text" name="deleteNoteID" required><br />
-        <input value="submit2" type="submit" name="submit">
+        <button value="deleteNote" type="submit" name="submit">Delete Note</button>
     </form>
 
 <h1>Create an Account</h1>
 <form method="POST">
     <label>Enter your name:</label><br />
     <input type="text" name="createName" required><br />
-    <input value="submit3" type="submit" name="submit">
+    <button value="createAcc" type="submit" name="submit">Create Account</button>
 </form>
 
 
@@ -60,12 +60,12 @@
         <input type="text" name="editDelegation"><br />
         <label>Date:</label><br />
         <input type="text" name="editDate"><br />
-        <input value="submit4" type="submit" name="submit">
+        <button value="editNote" type="submit" name="submit">Edit Note</button>
     </form>
 
     <h1>Display Data: </h1>
     <form method="POST">
-    <input value="submit5" type="submit" name="submit">
+    <button value="displayNote" type="submit" name="submit">Show</button>
     </form>
 
     <p>Note ID: {{ .NoteID}}</p>
