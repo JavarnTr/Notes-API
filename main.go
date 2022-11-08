@@ -172,6 +172,7 @@ func main() {
 					fmt.Println("No rows were returned!")
 				case nil:
 					noteData = Note{NoteID: id, Name: name, Text: text, Status: status, Delegation: delegation, Userid: userid, Time: date}
+					tmpl.Execute(w, noteData)
 					fmt.Println("ID:", id, "| Note Name:", name, "| Note Text:", text, "| Note Status:", status, "| Delegation:", delegation, "| Users:", userid, "| Time of creation:", date)
 				default:
 					fmt.Println("SQL query error occurred: ")
