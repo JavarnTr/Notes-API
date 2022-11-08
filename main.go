@@ -34,11 +34,9 @@ type User struct {
 	Name   string
 }
 
-//https://www.youtube.com/watch?v=QOZ4UrHMKus
+var noteData Note
 
 func main() {
-
-	p := Note{NoteID: "id", Name: "name", Text: "text", Status: "status", Delegation: "delegation", Userid: "userid", Time: "date"}
 
 	tmpl := template.Must(template.ParseFiles("forms/forms.html"))
 
@@ -165,8 +163,9 @@ func main() {
 				case sql.ErrNoRows:
 					fmt.Println("No rows were returned!")
 				case nil:
-
+					noteData = Note{NoteID: id, Name: name, Text: text, Status: status, Delegation: delegation, Userid: userid, Time: date}
 					fmt.Println("ID:", id, "| Note Name:", name, "| Note Text:", text, "| Note Status:", status, "| Delegation:", delegation, "| Users:", userid, "| Time of creation:", date)
+					tmpl.Execute(w, noteData)
 				default:
 					fmt.Println("SQL query error occurred: ")
 					panic(err)
@@ -178,8 +177,7 @@ func main() {
 				panic(err)
 			}
 		}
-
-		tmpl.Execute(w, p)
+		tmpl.Execute(w, noteData)
 	})
 
 	http.ListenAndServe(":8080", nil)
