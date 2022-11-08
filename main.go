@@ -15,7 +15,7 @@ const (
 	host     = "localhost"
 	port     = 5432
 	user     = "postgres"
-	password = "password"
+	password = "postgres"
 	dbname   = "Enterprise"
 )
 
@@ -35,43 +35,32 @@ type User struct {
 }
 
 func displayData(w http.ResponseWriter, r *http.Request) {
-	p := User{UserID: "Test", Name: "Another"}
-	custTemplate, err := template.ParseFiles("forms/forms.html")
-	if err != nil {
 
-	}
-	err = custTemplate.Execute(w, p)
 }
 
-https://www.youtube.com/watch?v=QOZ4UrHMKus
-func main() {
-
-	http.HandleFunc("/", displayData)
-
-	http.ListenAndServe(":8080", nil)
-}
+//https://www.youtube.com/watch?v=QOZ4UrHMKus
 
 func main() {
 
 	tmpl := template.Must(template.ParseFiles("forms/forms.html"))
 
-	http.HandleFunc("/", displayData)
+	//Connect to the database
+	connStr := fmt.Sprintf("host=%s port=%d user=%s "+
+		"password=%s dbname=%s sslmode=disable",
+		host, port, user, password, dbname)
+	db, err := sql.Open("postgres", connStr)
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
-			tmpl.Execute(w, nil)
+			p := User{UserID: "hello", Name: "Another"}
+
+			tmpl.Execute(w, p)
 			return
 		}
-
-		//Connect to the database
-		connStr := fmt.Sprintf("host=%s port=%d user=%s "+
-			"password=%s dbname=%s sslmode=disable",
-			host, port, user, password, dbname)
-		db, err := sql.Open("postgres", connStr)
-		if err != nil {
-			panic(err)
-		}
-		defer db.Close()
 
 		submit := r.FormValue("submit")
 
