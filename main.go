@@ -145,10 +145,10 @@ func main() {
 			}
 		} else if submit == "searchNote" {
 			//-------------------------------Search Notes-------------------------------//
-			//Interact with the database to search for those notes that match user input
+			//Interact with the database to search for those notes that match user input. This is case insensitive.
 			var searchedValue = r.FormValue("searchValue")
 
-			searchStatement := `Select * from notes Where name = $1 or text = $1 or status = $1 or delegation = $1;`
+			searchStatement := `Select * from notes Where LOWER(name) = LOWER($1) or LOWER(text) = LOWER($1) or LOWER(status) = LOWER($1) or LOWER(delegation) = LOWER($1);`
 			rows, err := db.Query(searchStatement, searchedValue)
 			if err != nil {
 				log.Fatal(err)
