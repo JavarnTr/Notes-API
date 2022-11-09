@@ -21,8 +21,14 @@
     <input type="text" name="addName" required><br />
     <label>Note Text:</label><br />
     <input type="text" name="addText" required><br />
-    <label>Note Status:</label><br />
-    <input type="text" name="addStatus" required><br />
+    <label>Status:</label><br />
+    <select name="addStatus">
+        <option value="None">None</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Completed">Completed</option>
+        <option value="Cancelled">Cancelled</option>
+        <option value="Delegated">Delegated</option>
+    </select><br>
     <label>Delegation:</label><br />
     <input type="text" name="addDelegation" required><br />
     <label>User ID:</label><br />
@@ -46,7 +52,7 @@
 
 <h1>Search for a Note</h1>
 <form method="POST">
-    <label>Enter a word to search for:</label><br />
+    <label>Enter a word to search for. This can be either name, text, or delegation:</label><br />
     <input type="text" name="searchValue" required><br />
     <button value="searchNote" type="submit" name="submit">Search</button>
 </form>
@@ -61,11 +67,15 @@
         <label>Text:</label><br />
         <input type="text" name="editText"><br />
         <label>Status:</label><br />
-        <input type="text" name="editStatus"><br />
+        <select name="editStatus">
+            <option value="None">None</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+            <option value="Cancelled">Cancelled</option>
+            <option value="Delegated">Delegated</option>
+         </select><br>
         <label>Delegation:</label><br />
         <input type="text" name="editDelegation"><br />
-        <label>Date:</label><br />
-        <input type="text" name="editDate"><br />
         <button value="editNote" type="submit" name="submit">Edit Note</button>
     </form>
 
