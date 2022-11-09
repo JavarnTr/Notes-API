@@ -143,11 +143,56 @@ func main() {
 			} else {
 				fmt.Println("\nNote removed successfully.")
 			}
+		} else if submit == "searchNote" {
+			//-------------------------------Search Notes-------------------------------//
+			//Interact with the database to search for those notes that match user input
+			var searchedValue = r.FormValue("searchValue")
+
+			searchStatement := `Select * from notes Where name = $1 or text = $1 or status = $1 or delegation = $1;`
+			rows, err := db.Query(searchStatement, searchedValue)
+			if err != nil {
+				log.Fatal(err)
+				fmt.Println("An error occurred when querying data!")
+			}
+
+			if err == sql.ErrNoRows {
+				println("Does not exist")
+			}
+			defer rows.Close()
+
+			for rows.Next() {
+				var id string
+				var name string
+				var text string
+				var status string
+				var delegation string
+				var userid string
+				var date string
+
+				//Print out the recieved data if it is found.
+				switch err = rows.Scan(&id, &name, &text, &status, &delegation, &userid, &date); err {
+				case sql.ErrNoRows:
+					fmt.Println("No rows were returned!")
+				case nil:
+					noteData = Note{NoteID: id, Name: name, Text: text, Status: status, Delegation: delegation, Userid: userid, Time: date}
+
+					fmt.Println("ID:", id, "| Note Name:", name, "| Note Text:", text, "| Note Status:", status, "| Delegation:", delegation, "| Users:", userid, "| Time of creation:", date)
+				default:
+					fmt.Println("SQL query error occurred: ")
+					panic(err)
+				}
+			}
+			// get any error encountered during iteration
+			err = rows.Err()
+			if err != nil {
+				panic(err)
+			}
+
 		} else if submit == "displayNote" {
 			//-------------------------------Display Notes-------------------------------//
 			//Interact with the database to search for those notes that match user input
-			searchStatement := `Select * from notes;`
-			rows, err := db.Query(searchStatement)
+			selectStatement := `Select * from notes;`
+			rows, err := db.Query(selectStatement)
 			if err != nil {
 				log.Fatal(err)
 				fmt.Println("An error occurred when querying data!")
