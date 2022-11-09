@@ -31,7 +31,7 @@
     </select><br>
     <label>Delegation:</label><br />
     <input type="text" name="addDelegation" required><br />
-    <label>User ID:</label><br />
+    <label>User ID (Log in to fill this out):</label><br />
     <input type="text" name="addUserId" id="addUserId" class="readonly" required><br />
     <button value="addNote" type="submit" name="submit">Add Note</button>
 </form> 
@@ -54,6 +54,9 @@
 
 <h1>Search for a Note</h1>
 <form method="POST">
+    <label>UserID (Log in to fill this out):</label><br />
+    <input type="text" name="searchLoggedUser" id="searchLoggedUser" class="readonly" required><br />
+    
     <label>Enter a word to search for. This can be either name, text, status, or delegation:</label><br />
     <input type="text" name="searchValue" required><br />
     <button value="searchNote" type="submit" name="submit">Search</button>
@@ -61,7 +64,10 @@
 
 
 <h1>Edit a Note</h1>
-    <form method="POST">
+    <form method="POST"> 
+        <label>Edit notes with userid (Log in to fill this out):</label><br />
+        <input type="text" name="editLoggedUser" id="editLoggedUser" class="readonly" required><br />
+
         <label>Enter the ID of the note you wish to edit:</label><br />
         <input type="text" name="editNoteID"><br />
         <label>Name:</label><br />
@@ -80,11 +86,10 @@
         <input type="text" name="editDelegation"><br />
         <button value="editNote" type="submit" name="submit">Edit Note</button>
     </form>
-
     
     <h1>Display Data: </h1>
     <form method="POST">
-        <label>Display Notes For:</label><br />
+        <label>Display Notes For (Log in to fill this out):</label><br />
         <input type="text" name="displayLoggedUser" id="displayLoggedUser" class="readonly" required><br />
         <button value="displayNote" type="submit" name="submit">Show</button>
     </form>
@@ -104,6 +109,8 @@
             $("#loginStatus").text("You are currently logged in as user " + userid + ".")
             $("#displayLoggedUser").val(userid);
             $("#deleteLoggedUser").val(userid);
+            $("#editLoggedUser").val(userid);
+            $("#searchLoggedUser").val(userid);
         });
 
         $(".readonly").on('keydown paste focus mousedown', function(e){

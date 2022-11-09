@@ -90,6 +90,8 @@ func main() {
 		} else if submit == "deleteNote" {
 			//-------------------------------Remove Note-------------------------------//
 
+			var currentID = r.FormValue("deleteLoggedUser")
+
 			removeDetails := Note{
 				NoteID: r.FormValue("deleteNoteID"),
 			}
@@ -98,8 +100,8 @@ func main() {
 			_ = removeDetails
 
 			//Insert the note data into the Postgres database for storage
-			deleteStatement := `delete from notes where id = $1`
-			_, err = db.Exec(deleteStatement, removeDetails.NoteID)
+			deleteStatement := `delete from notes where id = $1 and userid = $2`
+			_, err = db.Exec(deleteStatement, removeDetails.NoteID, currentID)
 			if err != nil {
 				panic(err)
 			} else {
@@ -132,12 +134,14 @@ func main() {
 				Delegation: r.FormValue("editDelegation"),
 			}
 
+			var currentlyLogged = r.FormValue("editLoggedUser")
+
 			//Details
 			_ = editDetails
 
 			//Insert the note data into the Postgres database for storage
-			deleteStatement := `update notes set (name, text, status, delegation, date) = ($1, $2, $3, $4, $5) where id = $6`
-			_, err = db.Exec(deleteStatement, editDetails.Name, editDetails.Text, editDetails.Status, editDetails.Delegation, currentTime, editDetails.NoteID)
+			editStatement := `update notes set (name, text, status, delegation, date) = ($1, $2, $3, $4, $5) where id = $6 and userid = $7`
+			_, err = db.Exec(editStatement, editDetails.Name, editDetails.Text, editDetails.Status, editDetails.Delegation, currentTime, editDetails.NoteID, currentlyLogged)
 			if err != nil {
 				panic(err)
 			} else {
@@ -147,9 +151,10 @@ func main() {
 			//-------------------------------Search Notes-------------------------------//
 			//Interact with the database to search for those notes that match user input. This is case insensitive.
 			var searchedValue = r.FormValue("searchValue")
+			var loggedInUser = r.FormValue("searchLoggedUser")
 
-			searchStatement := `Select * from notes Where LOWER(name) = LOWER($1) or LOWER(text) = LOWER($1) or LOWER(status) = LOWER($1) or LOWER(delegation) = LOWER($1);`
-			rows, err := db.Query(searchStatement, searchedValue)
+			searchStatement := `Select * from notes Where LOWER(name) = LOWER($1) or LOWER(text) = LOWER($1) or LOWER(status) = LOWER($1) or LOWER(delegation) = LOWER($1) and userid = $2;`
+			rows, err := db.Query(searchStatement, searchedValue, loggedInUser)
 			if err != nil {
 				log.Fatal(err)
 				fmt.Println("An error occurred when querying data!")
