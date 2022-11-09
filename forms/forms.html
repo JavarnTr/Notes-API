@@ -9,6 +9,7 @@
 </head>
 
 <h1>Login</h1>
+<p id="loginStatus">You are currently not logged in.</p>
 <label>Note id:</label><br />
 <input type="number" id="currentId"><br />
 <button id="loginBtn">Log In</button>
@@ -26,15 +27,13 @@
     <input type="text" name="addDelegation" required><br />
     <label>User ID:</label><br />
     <input type="text" name="addUserId" id="addUserId" class="readonly" required><br />
-    <label>Time:</label><br />
-    <input type="text" name="addTime" pattern="[0-9]*" Title="Please only enter numbers" required><br />
     <button value="addNote" type="submit" name="submit">Add Note</button>
 </form> 
 
 <h1>Delete a Note</h1>
     <form method="POST">
         <label>Note id:</label><br />
-        <input type="text" name="deleteNoteID" required><br />
+        <input type="text" name="deleteNoteID" id="noteDelete" required><br />
         <button value="deleteNote" type="submit" name="submit">Delete Note</button>
     </form>
 
@@ -82,12 +81,13 @@
         $("#loginBtn").click(function(event) {
             userid = $("#currentId").val();
             $("#addUserId").val(userid);
+            $("#loginStatus").text("You are currently logged in as user " + userid + ".")
         });
 
         $(".readonly").on('keydown paste focus mousedown', function(e){
                 if(e.keyCode != 9) // ignore tab
                     e.preventDefault();
-            });
+        });
     </script>
 </html>
 

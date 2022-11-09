@@ -7,6 +7,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"time"
 
 	_ "github.com/lib/pq"
 )
@@ -43,6 +44,9 @@ func main() {
 
 	tmpl := template.Must(template.ParseFiles("forms/forms.html"))
 
+	//Get the current time so it can be added to the note as the time of creation.
+	var currentTime = time.Now()
+
 	//Connect to the database
 	connStr := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
@@ -70,15 +74,14 @@ func main() {
 				Status:     r.FormValue("addStatus"),
 				Delegation: r.FormValue("addDelegation"),
 				Userid:     r.FormValue("addUserId"),
-				Time:       r.FormValue("addTime"),
 			}
 
-			// do something with details
+			//Details
 			_ = details
 
 			//Insert the note data into the Postgres database for storage
 			insertStatement := `INSERT INTO notes (name, text, status, delegation, userid, date) VALUES ($1, $2, $3, $4, $5, $6)`
-			_, err = db.Exec(insertStatement, details.Name, details.Text, details.Status, details.Delegation, details.Userid, details.Time)
+			_, err = db.Exec(insertStatement, details.Name, details.Text, details.Status, details.Delegation, details.Userid, currentTime)
 			if err != nil {
 				panic(err)
 			} else {
@@ -91,7 +94,7 @@ func main() {
 				NoteID: r.FormValue("deleteNoteID"),
 			}
 
-			// do something with details
+			//Details
 			_ = removeDetails
 
 			//Insert the note data into the Postgres database for storage
@@ -109,7 +112,7 @@ func main() {
 				Name: r.FormValue("createName"),
 			}
 
-			// do something with details
+			//Details
 			_ = accountCreate
 
 			insertStatement := `INSERT INTO users (name) VALUES ($1)`
@@ -127,15 +130,14 @@ func main() {
 				Text:       r.FormValue("editText"),
 				Status:     r.FormValue("editStatus"),
 				Delegation: r.FormValue("editDelegation"),
-				Time:       r.FormValue("editDate"),
 			}
 
-			// do something with details
+			//Details
 			_ = editDetails
 
 			//Insert the note data into the Postgres database for storage
 			deleteStatement := `update notes set (name, text, status, delegation, date) = ($1, $2, $3, $4, $5) where id = $6`
-			_, err = db.Exec(deleteStatement, editDetails.Name, editDetails.Text, editDetails.Status, editDetails.Delegation, editDetails.Time, editDetails.NoteID)
+			_, err = db.Exec(deleteStatement, editDetails.Name, editDetails.Text, editDetails.Status, editDetails.Delegation, currentTime, editDetails.NoteID)
 			if err != nil {
 				panic(err)
 			} else {
@@ -143,7 +145,6 @@ func main() {
 			}
 		} else if submit == "displayNote" {
 			//-------------------------------Display Notes-------------------------------//
-
 			//Interact with the database to search for those notes that match user input
 			searchStatement := `Select * from notes;`
 			rows, err := db.Query(searchStatement)
@@ -172,7 +173,7 @@ func main() {
 					fmt.Println("No rows were returned!")
 				case nil:
 					noteData = Note{NoteID: id, Name: name, Text: text, Status: status, Delegation: delegation, Userid: userid, Time: date}
-					tmpl.Execute(w, noteData)
+
 					fmt.Println("ID:", id, "| Note Name:", name, "| Note Text:", text, "| Note Status:", status, "| Delegation:", delegation, "| Users:", userid, "| Time of creation:", date)
 				default:
 					fmt.Println("SQL query error occurred: ")
