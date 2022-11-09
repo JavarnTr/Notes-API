@@ -191,8 +191,10 @@ func main() {
 		} else if submit == "displayNote" {
 			//-------------------------------Display Notes-------------------------------//
 			//Interact with the database to search for those notes that match user input
-			selectStatement := `Select * from notes;`
-			rows, err := db.Query(selectStatement)
+			var loggedIn = r.FormValue("displayLoggedUser")
+
+			selectStatement := `Select * from notes where userid = $1;`
+			rows, err := db.Query(selectStatement, loggedIn)
 			if err != nil {
 				log.Fatal(err)
 				fmt.Println("An error occurred when querying data!")
@@ -219,6 +221,7 @@ func main() {
 				case nil:
 					noteData = Note{NoteID: id, Name: name, Text: text, Status: status, Delegation: delegation, Userid: userid, Time: date}
 					fmt.Println("ID:", id, "| Note Name:", name, "| Note Text:", text, "| Note Status:", status, "| Delegation:", delegation, "| Users:", userid, "| Time of creation:", date)
+					tmpl.Execute(w, noteData)
 				default:
 					fmt.Println("SQL query error occurred: ")
 					panic(err)

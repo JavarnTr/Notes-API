@@ -38,6 +38,8 @@
 
 <h1>Delete a Note</h1>
     <form method="POST">
+        <label>Delete notes with userid (Log in to fill this out):</label><br />
+        <input type="text" name="deleteLoggedUser" id="deleteLoggedUser" class="readonly" required><br />
         <label>Note id:</label><br />
         <input type="text" name="deleteNoteID" id="noteDelete" required><br />
         <button value="deleteNote" type="submit" name="submit">Delete Note</button>
@@ -82,7 +84,9 @@
     
     <h1>Display Data: </h1>
     <form method="POST">
-    <button value="displayNote" type="submit" name="submit">Show</button>
+        <label>Display Notes For:</label><br />
+        <input type="text" name="displayLoggedUser" id="displayLoggedUser" class="readonly" required><br />
+        <button value="displayNote" type="submit" name="submit">Show</button>
     </form>
 
     <p>Note ID: {{ .NoteID}}</p>
@@ -98,6 +102,8 @@
             userid = $("#currentId").val();
             $("#addUserId").val(userid);
             $("#loginStatus").text("You are currently logged in as user " + userid + ".")
+            $("#displayLoggedUser").val(userid);
+            $("#deleteLoggedUser").val(userid);
         });
 
         $(".readonly").on('keydown paste focus mousedown', function(e){
